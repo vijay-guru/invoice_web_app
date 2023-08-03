@@ -4,6 +4,7 @@ import "dotenv/config"
 import express from "express";
 import morgan from "morgan";
 import connectToDb from "./config/connectDb.js";
+import mongoSanitize from "express-mongo-sanitize";
 
 await connectToDb();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
 app.use(cookieParser());
+app.use(mongoSanitize())
 
 app.get('/api/v1/test', (req, res) =>{
     res.send({data:"Welcome to invoice app"})
