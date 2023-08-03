@@ -1,6 +1,20 @@
 version: "3.1"
 
 services:
+  mongodb:
+    image: mongo:5.0.6-focal
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME : ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD : ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - invoice
+
   api:
     restart: always
     build:
@@ -11,26 +25,21 @@ services:
       - .:/app
     depends_on:
       - mongodb
-    ports:
-      - "5001:5001"
     environment:
       NODE_ENV: ${NODE_ENV}
-      MONGO_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb
+      MONGO_URI: mongodb+srv://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@cluster0.jlycq.mongodb.net
       FORCE_COLOR: 1
     networks:
       - invoice
 
-  mongodb:
-    image: mongo:5.0.6-focal
-    container_name: mongodb
-    restart: always
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME : vjguru
-      MONGO_INITDB_ROOT_PASSWORD : qpalzm10
+  client:
+    build:
+      context: ./client
+      dockerfile: ./docker/local/Dockerfile
+    restart: on-failure
     volumes:
-      - mongodb-data:/data/db
+      - ./client:/app
+      - /app/node_modules
     networks:
       - invoice
 
@@ -40,13 +49,14 @@ services:
       - mongodb
     ports:
       - "8081:8081"
+    restart: always
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: vjguru
-      ME_CONFIG_MONGODB_ADMINPASSWORD: qpalzm10
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: pass
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: false
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
     networks:
       - invoice
 
@@ -57,10 +67,26 @@ services:
       - "1025:1025"
     networks:
       - invoice
+  nginx:
+    build:
+      context: ./docker/local/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - static_volume:/app/statisfiles
+      - pdf_volume:/app/docs
+    networks:
+      - invoice
 
 networks:
   invoice:
     driver: bridge
 
 volumes:
-  mongodb-data:      
+  mongodb-data:
+  static_volume:
+  pdf_volume:
