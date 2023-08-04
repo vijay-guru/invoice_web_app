@@ -27,7 +27,7 @@ services:
       - mongodb
     environment:
       NODE_ENV: ${NODE_ENV}
-      MONGO_URI: mongodb+srv://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@cluster0.jlycq.mongodb.net
+      MONGO_URI: mongodb+srv://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@cluster0.jlycq.mongodb.net/invoice
       FORCE_COLOR: 1
     networks:
       - invoice

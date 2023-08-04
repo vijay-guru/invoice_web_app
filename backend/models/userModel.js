@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import 'dotenv/config'
 import mongoose from 'mongoose'
 import validator from 'validator'
-import { USER } from '../constants'
+import { USER } from '../constants/index.js'
 
 const {Schema}= mongoose;
 
@@ -20,8 +20,8 @@ const userSchema = new Schema({
         unique:true,
         trim:true,
         validate:{
-            validator:(value)=>{
-            return /^[A-z][A-z0-9-_]{3,23}$/.test(value)
+            validator:function (value){
+                return /^[A-Za-z][A-Za-z0-9-_]{3,23}$/.test(value);
         },
         message:"Please provide an alphanumberic name. Special characters not allowed. '-' and '_' are allowed."
     }},
@@ -45,7 +45,7 @@ const userSchema = new Schema({
     passwordConfirm:{
         type:String,
         validate:{
-            validator:(value)=>{
+            validator:function (value){
                 return value === this.password
             },
             message:"Passwords mismatch !!!"
@@ -59,15 +59,14 @@ const userSchema = new Schema({
     provider:{
         type:String,
         required:true,
-        default:email
+        default:"email"
     },
     googleID:String,
     avatar:String,
     businessName:String,
     phoneNumber:{
         type:String,
-        default:"+91987654321",
-        validate:[validator.isPhoneNumber,"Invalid phone number"]
+        default:"+91987654321"
     },
     address:String,
     city:String,
@@ -88,15 +87,15 @@ const userSchema = new Schema({
 })
 
 
-userSchema.pre("save",async(next)=>{
-    if(this.role.length === 0){
-        this.role.push(USER);
+userSchema.pre("save",async function (next){
+    if(this.roles.length === 0){
+        this.roles.push(USER);
         next();
     }
 });
 
 
-userSchema.pre("save",async(next)=>{
+userSchema.pre("save",async function (next){
     if(!this.isModified("password")){
         return next();
     }
@@ -109,7 +108,7 @@ userSchema.pre("save",async(next)=>{
 })
 
 
-userSchema.pre("save",async(next)=>{
+userSchema.pre("save",async function (next){
     if(!this.isModified("password") || this.isNew){
         return next();
     }
@@ -118,7 +117,7 @@ userSchema.pre("save",async(next)=>{
 })
 
 
-userSchema.methods.comparePassword = async (givenPassword)=>{
+userSchema.methods.comparePassword = async function (givenPassword){
     return await bcrypt.compare(givenPassword,this.password);
 };
 
