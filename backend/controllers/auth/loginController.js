@@ -36,13 +36,11 @@ const loginUser = asyncHandler(async(req,res)=>{
         const newRefreshToken = jwt.sign({
             id:existingUser._id,
             roles:existingUser.roles
-        },process.env.JWT_REFRESH_SECRET_KEY,{expiresIn:"1h"});
+        },process.env.JWT_REFRESH_SECRET_KEY,{expiresIn:"1d"});
 
         const cookies = req.cookies;
 
-        let newRefreshTokenArray = !cookies?.jwt ? 
-        existingUser.refreshToken : 
-        existingUser.refreshToken.
+        let newRefreshTokenArray = !cookies?.jwt ? existingUser.refreshToken : existingUser.refreshToken.
         filter((refT)=>refT !== cookies.jwt);
 
         if(cookies?.jwt){
