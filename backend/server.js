@@ -7,6 +7,7 @@ import connectToDb from "./config/connectDb.js";
 import mongoSanitize from "express-mongo-sanitize";
 import { errorHandler,notFound } from "./middleware/errorMiddleware.js";
 import authRoutes from './routes/authRoutes.js'
+import userRoutes from "./routes/userRoutes.js"
 
 await connectToDb();
 
@@ -23,6 +24,7 @@ app.use(mongoSanitize())
 
 
 app.use('/api/v1/auth',authRoutes);
+app.use('/api/v1/user',userRoutes);
 
 app.get('/api/v1/test', (req, res) =>{
     res.send({data:"Welcome to invoice app"})

@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-aandler'
+import asyncHandler from 'express-async-handler'
 import jwt from 'jsonwebtoken'
 import User from '../models/userModel.js'
 
@@ -7,7 +7,7 @@ const checkAuth = asyncHandler(async(req,res,next)=>{
 
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
-    if(authHeader && authHeader.startswith('Bearer ')){
+    if(authHeader && authHeader.startsWith('Bearer ')){
         jwtToken = authHeader.split(" ")[1];
 
         jwt.verify(
@@ -21,9 +21,10 @@ const checkAuth = asyncHandler(async(req,res,next)=>{
                 req.user = await User.findById(userId).select("-password");
                 req.roles = decoded.roles;
 
+                next();
             }
         )
-        next();
+        
     }
     else{
         res.sendStatus(403);
