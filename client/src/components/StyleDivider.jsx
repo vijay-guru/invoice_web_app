@@ -6,7 +6,7 @@ const DividerStyle = styled(Divider)({
     marginLeft:"auto",
     marginRight:"auto",
     height:"3px",
-    backgroundImage:"linear-gradient(to right,rgba(9,84,132),rgba(0,0,0,0))"
+    backgroundImage:"linear-gradient(to right,rgba(0,0,0,0),rgba(9,84,132),rgba(0,0,0,0))"
 })
 function StyleDivider() {
   return <DividerStyle/>

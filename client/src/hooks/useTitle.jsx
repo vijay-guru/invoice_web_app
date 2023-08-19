@@ -7,9 +7,6 @@ function useTitle(title) {
 
         return ()=>(document.title = prevTitle)
     },[title])
-  return (
-    <div>useTitle</div>
-  )
 }
 
 export default useTitle

@@ -1,11 +1,11 @@
-import { Box, CssBaseLine, Link, Typography } from '@mui/material'
+import { Box, CssBaseline, Link, Typography } from '@mui/material'
 import { FaMoneyBillWave } from 'react-icons/fa'
 
 function Copyright() {
     return (
         <Typography variant="body2" align="center" sx={{ color: "#ffffff" }}>
-            {"Copyright ©"}
-            <Link color="inherit" href="https://www.github.com/vijay-guru">V - INVOICE</Link>
+            {"Copyright ©"}{" "}
+            <Link color="inherit" href="https://www.github.com/vijay-guru">V - INVOICE</Link>{" "}
             {new Date().getFullYear()}
         </Typography>
     )
@@ -17,7 +17,7 @@ function Footer() {
             bottom: 0,
             width: "100%",
         }}>
-            <CssBaseLine />
+            <CssBaseline />
             <Box component="footer" sx={{
                 py: 1,
                 px: 1,
